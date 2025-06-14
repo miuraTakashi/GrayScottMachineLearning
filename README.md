@@ -2,31 +2,49 @@
 
 Gray-Scottモデルの時系列データに対する3D CNN Autoencoderを用いた機械学習分析プロジェクト
 
+**現在の規模**: 1500サンプル、256次元潜在空間（Phase 1改善版）、包括的クラスタリング分析
+
 ## プロジェクト構造
 
 ```
 ├── src/                    # ソースコード
-│   ├── gray_scott_autoencoder.py    # メインのオートエンコーダー実装
-│   ├── train_autoencoder.py         # オートエンコーダー学習専用
-│   ├── cluster_analysis.py          # クラスター分析専用
-│   ├── visualize_results.py         # 結果可視化専用
-│   ├── optimal_clustering.py        # 包括的最適化分析
-│   ├── create_cluster_gallery.py    # HTMLギャラリー作成
-│   ├── main_workflow.py             # 統合ワークフロー
-│   └── run_analysis.py              # メイン実行スクリプト
+│   ├── gray_scott_autoencoder.py         # メインのオートエンコーダー実装
+│   ├── gray_scott_autoencoder_phase1.py  # Phase 1改善版オートエンコーダー
+│   ├── train_autoencoder.py              # オートエンコーダー学習専用
+│   ├── train_model.py                    # モデル訓練スクリプト
+│   ├── main_workflow.py                  # 統合ワークフロー
+│   ├── visualize_1500_samples.py         # 1500サンプル基本可視化
+│   ├── create_1500_combined_visualization.py # 統合可視化（4プロット）
+│   ├── optimal_cluster_analysis_1500.py  # 最適クラスタ数分析
+│   ├── create_k4_visualization.py        # k=4クラスタリング専用
+│   ├── create_k35_visualization.py       # k=35クラスタリング専用
+│   ├── improved_3dcnn_architecture.py    # 改善アーキテクチャ設計
+│   ├── implementation_roadmap.py         # 実装ロードマップ
+│   └── check_new_data.py                 # データ検証ツール
 ├── results/                # 結果ファイル
-│   ├── *.png              # 可視化画像
-│   ├── *.pkl              # 分析結果データ
-│   ├── *.csv              # 結果テーブル
-│   └── *.html             # HTMLギャラリー
+│   ├── *_1500samples.png  # 1500サンプル可視化画像
+│   ├── training_loss_*.png # 学習曲線
+│   ├── latent_representations_frames_all.pkl # 潜在表現データ
+│   ├── extracted_features_frames_all.csv     # 特徴データ
+│   └── 3dcnn_improvement_roadmap.png         # 改善ロードマップ図
 ├── models/                 # 訓練済みモデル
 │   └── *.pth              # PyTorchモデルファイル
 ├── data/                   # データファイル
-│   └── gif/               # GIFファイル
+│   └── gif/               # 1500個のGIFファイル
 ├── tests/                  # テストファイル
+│   ├── test_functionality.py        # 機能テスト
+│   ├── test_cluster_analysis.py     # クラスタリングテスト
+│   └── test_interactive_clustering.py # インタラクティブテスト
 ├── notebooks/              # Jupyter notebooks
+│   ├── cluster_analysis_notebook.ipynb    # クラスタ分析ノートブック
+│   └── cluster_analysis_simple.ipynb     # シンプル分析ノートブック
 ├── docs/                   # ドキュメント
+│   ├── latent_vectors_readme.md      # 潜在ベクトル説明
+│   └── fix_visualization_readme.md   # 可視化修正説明
 ├── requirements.txt        # 依存関係
+├── PROJECT_HISTORY.md      # プロジェクト履歴
+├── TECHNICAL_SUMMARY.md    # 技術サマリー
+├── PROJECT_SUMMARY.md      # プロジェクト概要
 └── README.md              # このファイル
 ```
 
@@ -60,14 +78,17 @@ Gray-Scottモデルの時系列データに対する3D CNN Autoencoderを用い�
 # プロジェクトディレクトリに移動
 cd src
 
-# 1. オートエンコーダー学習
+# 1. 基本システム（Phase 0）
+python gray_scott_autoencoder.py
+
+# 2. 改善版システム（Phase 1）
+python gray_scott_autoencoder_phase1.py
+
+# 3. 個別学習専用
 python train_autoencoder.py
 
-# 2. クラスター分析
-python cluster_analysis.py
-
-# 3. 結果可視化
-python visualize_results.py
+# 4. 1500サンプル可視化
+python visualize_1500_samples.py
 ```
 
 ### 統合ワークフロー
@@ -87,30 +108,39 @@ python main_workflow.py --status        # 状態確認
 ### 高度な分析
 
 ```bash
-# 包括的最適化分析
-python optimal_clustering.py
+# 包括的最適化分析（1500サンプル）
+python optimal_cluster_analysis_1500.py
 
-# HTMLギャラリー作成
-python create_cluster_gallery.py
+# 特定クラスタ数での詳細分析
+python create_k4_visualization.py   # k=4クラスタリング
+python create_k35_visualization.py  # k=35クラスタリング
+
+# 統合可視化（4プロット表示）
+python create_1500_combined_visualization.py
+
+# データ検証
+python check_new_data.py
 ```
 
 ## 出力ファイル
 
 ### モデルファイル (`models/`)
-- `trained_autoencoder.pth`: 学習済みオートエンコーダー
+- `trained_autoencoder.pth`: 基本学習済みオートエンコーダー
+- `trained_autoencoder_phase1.pth`: Phase 1改善版モデル
 
 ### 結果ファイル (`results/`)
-- `analysis_results.pkl`: 可視化用データ
-- `latent_representations.pkl`: 潜在表現データ
-- `clustering_results.csv`: 結果テーブル
-- `training_loss.png`: 学習曲線
-- `gray_scott_clustering_results.png`: 統合可視化
-- `gray_scott_detailed_heatmap.png`: 詳細ヒートマップ
-- `silhouette_analysis_results.png`: シルエット分析
-
-### HTMLギャラリー (`results/`)
-- `cluster_gallery.html`: クラスターギャラリー
-- `cluster_gallery_diverse.html`: 多様性重視ギャラリー
+- `latent_representations_frames_all.pkl`: 1500サンプル潜在表現データ（814KB）
+- `extracted_features_frames_all.csv`: 特徴データ（66KB）
+- `training_loss_frames_all.png`: 学習曲線
+- `gray_scott_clustering_results_1500samples.png`: 統合可視化（1500サンプル）
+- `gray_scott_clustering_results_k4_1500samples.png`: k=4クラスタリング結果
+- `gray_scott_clustering_results_k35_1500samples.png`: k=35クラスタリング結果
+- `gray_scott_k35_heatmap_1500samples.png`: k=35詳細ヒートマップ
+- `optimal_cluster_analysis_1500samples.png`: 最適クラスタ数分析
+- `pca_scatter_1500samples.png`: PCA散布図
+- `tsne_scatter_1500samples.png`: t-SNE散布図
+- `fk_scatter_1500samples.png`: f-k平面散布図
+- `3dcnn_improvement_roadmap.png`: 改善ロードマップ図
 
 ## 依存関係
 
@@ -173,17 +203,31 @@ GrayScott-f{f_value}-k{k_value}-{sequence}.gif
 
 ### ファイル構成の詳細
 
-- `gray_scott_autoencoder.py`: コアクラスとモデル定義
-- `train_autoencoder.py`: 学習専用スクリプト（高速反復実験用）
-- `cluster_analysis.py`: クラスタリング専用スクリプト
-- `visualize_results.py`: 可視化専用スクリプト
-- `optimal_clustering.py`: 包括的分析（時間がかかる）
+#### 主要システム
+- `gray_scott_autoencoder.py`: 基本システム（Phase 0）
+- `gray_scott_autoencoder_phase1.py`: Phase 1改善版システム
+- `train_autoencoder.py`: 学習専用スクリプト
+- `train_model.py`: モデル訓練スクリプト
+- `main_workflow.py`: 統合ワークフロー管理
+
+#### 可視化・分析ツール
+- `visualize_1500_samples.py`: 基本可視化（1500サンプル）
+- `create_1500_combined_visualization.py`: 統合4プロット表示
+- `optimal_cluster_analysis_1500.py`: 最適クラスタ数分析
+- `create_k4_visualization.py`: k=4専用分析
+- `create_k35_visualization.py`: k=35専用分析
+
+#### 設計・ユーティリティ
+- `improved_3dcnn_architecture.py`: 改善アーキテクチャ設計
+- `implementation_roadmap.py`: 実装ロードマップ
+- `check_new_data.py`: データ検証ツール
 
 ### 拡張方法
 
-1. **新しい可視化の追加**: `visualize_results.py`に関数を追加
-2. **新しいクラスタリング手法**: `cluster_analysis.py`を拡張
-3. **モデルアーキテクチャの変更**: `gray_scott_autoencoder.py`のモデル定義を修正
+1. **新しい可視化の追加**: `visualize_1500_samples.py`ベースで新機能作成
+2. **新しいクラスタリング手法**: `create_k4_visualization.py`を参考に拡張
+3. **モデルアーキテクチャの変更**: `gray_scott_autoencoder_phase1.py`をベースに改良
+4. **Phase 2以降の実装**: `implementation_roadmap.py`の計画に従って段階的実装
 
 ## ライセンス
 
@@ -191,7 +235,11 @@ GrayScott-f{f_value}-k{k_value}-{sequence}.gif
 
 ## 更新履歴
 
-- v1.0: 初期リリース
+- v1.0: 初期リリース（375サンプル、64次元潜在空間）
 - v1.1: 分離ワークフロー対応
 - v1.2: 可視化機能強化
-- v1.3: ディレクトリ構造整理 
+- v1.3: ディレクトリ構造整理
+- v1.4: 1500サンプル対応（4倍データ拡張、128次元潜在空間）
+- v1.5: クラスタリング分析最適化（k=4, k=35専用分析）
+- v1.6: Phase 1改善実装（256次元潜在空間、AdamW、強化正則化）
+- v1.7: プロジェクト構造最適化とREADME更新 

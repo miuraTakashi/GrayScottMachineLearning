@@ -2,7 +2,31 @@
 
 Gray-Scottモデルの時系列データに対する3D CNN Autoencoderを用いた機械学習分析プロジェクト
 
-**現在の規模**: 1500サンプル、256次元潜在空間（Phase 1改善版）、包括的クラスタリング分析
+**現在の規模**: 1500サンプル、256次元潜在空間、3段階進化アーキテクチャ（Phase 2完了）
+
+## 🎯 Quick Start
+
+### 最高性能システム (推奨)
+```bash
+python src/gray_scott_autoencoder_phase1.py  # シルエットスコア 0.565
+```
+
+### 物理解析システム (最新)
+```bash
+# Google Colab (GPU推奨)
+# GrayScott_Phase2_Colab.ipynb を実行
+
+# ローカル可視化
+python src/visualize_phase2_results.py  # f-k空間マッピング付き
+```
+
+## 📊 Performance Summary
+
+| システム | シルエットスコア | 改善率 | 特徴 |
+|----------|------------------|--------|------|
+| ベースライン | 0.413 | - | 基本3D CNN |
+| **Phase 1** | **0.565** | **+36.8%** | **最高性能** |
+| Phase 2 | 0.467 | +13.1% | 物理的意味 |
 
 ## プロジェクト構造
 

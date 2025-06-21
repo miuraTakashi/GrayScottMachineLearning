@@ -140,6 +140,12 @@ data/
 # *.jpg
 # *.jpeg
 
+# Large archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
 # Results and outputs (keep structure, ignore content)
 results/*.png
 results/*.pkl

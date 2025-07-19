@@ -579,7 +579,7 @@ def main():
     """Phase 2 メイン実行関数"""
     
     # Phase 2 ハイパーパラメータ
-    gif_folder = '../data/gif'
+    gif_folder = '/Users/nakashimarikuto/Gray scott/GrayScottMachineLearning/data/gif'
     fixed_frames = 30
     target_size = (64, 64)
     latent_dim = 256  # Phase 1と同じ

@@ -6,4 +6,6 @@ matplotlib>=3.4.0
 seaborn>=0.11.0
 scikit-learn>=1.0.0
 imageio>=2.9.0
-Pillow>=8.3.0 
+Pillow>=8.3.0
+ipywidgets>=8.0.0
+ipympl>=0.9.0 
